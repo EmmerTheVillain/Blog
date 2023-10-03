@@ -8,12 +8,12 @@ const { Op } = require('sequelize');
 router.get('/', withAuth, async (req, res) => {
   try {
     // Find all user IDs that the current user has sent match requests to
-    const sentMatches = await Match.findAll({
-      where: {
-        sender_id: req.session.user_id,
-      },
-      attributes: ['receiver_id'],
+    const blogData = await blogData.findAll({
+      include: User,
+      order: [['createdAt', 'DESC']],
     });
+
+    const blogs = blogData.map((blog) => blog.get({ plain: true }));
 
 // Render the homepage template with user data and logged-in flag
 res.render('homepage', {
@@ -25,4 +25,31 @@ res.render('homepage', {
       // Handle errors by sending a 500 response with error details
       res.status(500).json(err);
     }
+});
+//Handle rendering the login page
+router.get('/login', (req, res) => {
+  // If a session exists, redirect the request to the homepage
+  if (req.session.logged_in) {
+    res.redirect('/');
+    return;
+  }
+
+  // Render the login template with any necessary data
+  res.render('login', {
+    // Pass any necessary data to the login template
+  });
+});
+
+// Handle rendering the new user registration page
+router.get('/newUser', (req, res) => {
+  // If a session exists, redirect the request to the homepage
+  if (req.session.logged_in) {
+    res.redirect('/');
+    return;
+  }
+
+  // Render the newUser template with any necessary data
+  res.render('newUser', {
+    // Pass any necessary data to the newUser template
+  });
 });

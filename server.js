@@ -5,7 +5,7 @@ const exphbs = require('express-handlebars');
 const path = require('path');
 
 //file dependencies
-const routes = require('./controllers');
+// const routes = require('./controller/index.js');
 const helpers = require('./utils/helpers');
 const sequelize = require('./config/connection');
 
@@ -41,7 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use("/images", express.static(path.join(__dirname, "/public/images")));
 
-app.use(routes);
+// app.use(routes);
 
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => console.log('Now listening'));
