@@ -1,0 +1,25 @@
+
+  <section class="blog-container">
+    <p>{{blog.content}}</p>
+    <h2>{{blog.title}}</h2>
+    <p>{{blog.user.username}}</p>
+    
+  </section>
+
+  <section class="comments-container">
+    <h4>Comments</h4>
+    {{#each blog.comments}}
+      <div class="comment">
+        <p>Posted on: {{createdAt}} by {{user.username}}: {{content}}</p>
+      </div>
+    {{/each}}
+
+{{#if logged_in}}
+    <form id="comment-form" data-blog-id="{{blog.id}}">
+      <textarea id="comment-content" placeholder="Leave a comment"></textarea>
+      <button type="submit">Submit Comment</button>
+    </form>
+  </section>
+
+  <script src="/js/comment.js"></script>
+{{/if}}
