@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const { User } = require('../models');
+const { User, Blog } = require('../models');
 const withAuth = require('../utils/auth');
 
-// Prevent non logged in users from viewing the homepage
+
 router.get('/', withAuth, async (req, res) => {
   try {
     const userData = await User.findAll({
@@ -14,7 +14,7 @@ router.get('/', withAuth, async (req, res) => {
 
     res.render('homepage', {
       users,
-      // Pass the logged in flag to the template
+      // pass login state to homepage
       logged_in: req.session.logged_in,
     });
   } catch (err) {
@@ -23,7 +23,7 @@ router.get('/', withAuth, async (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-  // If a session exists, redirect the request to the homepage
+ //redirect to homepage
   if (req.session.logged_in) {
     res.redirect('/');
     return;
@@ -32,4 +32,29 @@ router.get('/login', (req, res) => {
   res.render('login');
 });
 
+// get blog pages
+router.get('/blogs/:id', async (req, res) => {
+  try {
+    const blogData = await Blog.findByPk(req.params.id, {
+      include: [
+        { model: User, attributes: ['username'] },
+        { model: Comment, include: [User] },
+      ],
+    });
+
+    if (!blogData) {
+      res.status(404).json({ message: 'Blog not found' });
+      return;
+    }
+
+    const blog = blogData.get({ plain: true });
+
+    res.render('blog', {
+      blog,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 module.exports = router;
