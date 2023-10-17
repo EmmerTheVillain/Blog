@@ -13,7 +13,7 @@
     <h1>
       Blog 
     </h1>
-    <!-- Only display the logout button if the user is logged in -->
+    <!-- checks if logged in -->
     {{#if logged_in}}
     <nav>
       <button class="btn" id="logout">logout</button>
@@ -27,7 +27,7 @@
       
   </footer>
 
-  <!-- Only include the logout script if the user is logged in -->
+  <!--checks if logged in -->
   {{#if logged_in}}
   <script src="/js/logout.js"></script>
   {{/if}}
